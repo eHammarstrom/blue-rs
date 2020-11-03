@@ -1,0 +1,11 @@
+[build]
+target = "thumbv7m-none-eabi"
+
+[target.'cfg(all(target_arch = "arm", target_os = "none"))']
+runner = "probe-run --chip STM32F103C8"
+
+rustflags = [
+    # This is needed if your flash or ram addresses are not aligned to 0x10000 in memory.x
+    # "-C", "link-arg=--nmagic",
+    "-C", "link-arg=-Tlink.x",
+]
