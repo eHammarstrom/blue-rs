@@ -3,13 +3,13 @@
 
 use cortex_m::asm;
 use cortex_m_rt::entry;
-use rtt_target::{rprintln, rtt_init_print};
+use defmt;
+use defmt_rtt as _; // global logger
 use stm32f1::stm32f103::{interrupt, Interrupt, NVIC};
 
 #[entry]
 fn main() -> ! {
-    rtt_init_print!();
-    rprintln!("Hello, world!");
+    defmt::info!("Hello, world!");
 
     unsafe { NVIC::unmask(Interrupt::EXTI0) };
 
@@ -20,8 +20,8 @@ fn main() -> ! {
 }
 
 #[panic_handler]
-fn panic(info: &core::panic::PanicInfo) -> ! {
-    rprintln!("{}", info);
+fn panic(_info: &core::panic::PanicInfo) -> ! {
+    defmt::info!("Panic!");
     exit()
 }
 
@@ -33,5 +33,5 @@ fn exit() -> ! {
 
 #[interrupt]
 fn EXTI0() {
-    rprintln!("EXTI0");
+    defmt::info!("IRQ!");
 }
